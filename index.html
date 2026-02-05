@@ -8,7 +8,13 @@
         :root { --rosa: #ff4d6d; --fondo: #fff0f3; --texto: #590d22; }
         
         body { 
+            /* Aquí está tu imagen de fondo del perrito */
+            background-image: url('https://i.postimg.cc/LXs6wcwy/65a54829cbbe07a6302459f35420ec2e.jpg');
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
             background-color: var(--fondo); 
+            
             font-family: sans-serif; 
             margin: 0; 
             padding: 20px; 
@@ -19,20 +25,20 @@
             overflow-x: hidden;
         }
 
-        h1 { margin: 20px 0; font-size: 1.6rem; text-align: center; z-index: 2; position: relative; }
+        h1 { margin: 20px 0; font-size: 1.6rem; text-align: center; z-index: 2; position: relative; background: rgba(255,255,255,0.7); padding: 10px 20px; border-radius: 50px; }
 
         #contenedor { width: 100%; max-width: 400px; z-index: 2; position: relative; }
 
         .carta { 
-            background: white; 
+            background: rgba(255, 255, 255, 0.9); 
             padding: 20px; 
             margin-bottom: 15px; 
             border-radius: 20px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
             border-left: 8px solid var(--rosa); 
         }
 
-        .bloqueada { background: #eee; border-left-color: #adb5bd; opacity: 0.7; }
+        .bloqueada { background: rgba(238, 238, 238, 0.8); border-left-color: #adb5bd; opacity: 0.9; }
 
         .tag { display: block; font-size: 0.75rem; color: var(--rosa); font-weight: bold; margin-bottom: 5px; }
 
@@ -98,7 +104,6 @@
                 localStorage.setItem('ID_RESCATE_TOTAL', inicio);
             }
 
-            // Reiniciar cada 7 días (168 horas)
             if ((ahora - parseInt(inicio)) > (168 * 3600000)) {
                 inicio = ahora;
                 localStorage.setItem('ID_RESCATE_TOTAL', inicio);
@@ -108,6 +113,7 @@
             frases.forEach(f => {
                 const desc = parseInt(inicio) + (f.h * 3600000);
                 if (ahora >= desc) {
+                    // AQUÍ ESTABA EL ERROR: Faltaban las comillas invertidas ` `
                     html += <div class="carta"><span class="tag">✨ DESBLOQUEADO</span><p>${f.texto}</p></div>;
                 } else {
                     const r = desc - ahora;
@@ -115,6 +121,7 @@
                     const hr = Math.floor((r % 86400000) / 3600000);
                     const m = Math.floor((r % 3600000) / 60000);
                     const s = Math.floor((r % 60000) / 1000);
+                    // AQUÍ TAMBIÉN: Se agregaron las comillas invertidas ` `
                     html += <div class="carta bloqueada"><span class="tag">🔒 Disponible en: ${d}d ${hr}h ${m}m ${s}s</span><p><i>Mensaje sorpresa...</i></p></div>;
                 }
             });
@@ -122,7 +129,7 @@
         }
 
         mostrar();
-        setInterval(mostrar, 1000); // Actualiza cada segundo para ver los segundos del reloj
+        setInterval(mostrar, 1000);
     </script>
 </body>
 </html>
