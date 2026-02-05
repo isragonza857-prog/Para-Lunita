@@ -8,7 +8,7 @@
         :root { --rosa: #ff4d6d; --fondo: #fff0f3; --texto: #590d22; }
         
         body { 
-            /* Aquí está tu imagen de fondo del perrito */
+            /* Imagen del perrito */
             background-image: url('https://i.postimg.cc/LXs6wcwy/65a54829cbbe07a6302459f35420ec2e.jpg');
             background-size: cover; 
             background-position: center; 
@@ -30,7 +30,7 @@
         #contenedor { width: 100%; max-width: 400px; z-index: 2; position: relative; }
 
         .carta { 
-            background: rgba(255, 255, 255, 0.9); 
+            background: rgba(255, 255, 255, 0.95); 
             padding: 20px; 
             margin-bottom: 15px; 
             border-radius: 20px; 
@@ -38,11 +38,10 @@
             border-left: 8px solid var(--rosa); 
         }
 
-        .bloqueada { background: rgba(238, 238, 238, 0.8); border-left-color: #adb5bd; opacity: 0.9; }
+        .bloqueada { background: rgba(238, 238, 238, 0.85); border-left-color: #adb5bd; opacity: 0.9; }
 
         .tag { display: block; font-size: 0.75rem; color: var(--rosa); font-weight: bold; margin-bottom: 5px; }
 
-        /* Estilos de los corazones */
         .corazon-bg {
             position: fixed;
             top: -10%;
@@ -81,7 +80,6 @@
             { id: 14, texto: "¡Mañana reiniciamos! ✨", h: 156 }
         ];
 
-        // Función para la cascada de corazones
         function crearCorazon() {
             const c = document.createElement('div');
             c.className = 'corazon-bg';
@@ -113,7 +111,7 @@
             frases.forEach(f => {
                 const desc = parseInt(inicio) + (f.h * 3600000);
                 if (ahora >= desc) {
-                    // AQUÍ ESTABA EL ERROR: Faltaban las comillas invertidas ` `
+                    // AQUÍ ESTABA EL ERROR: Agregué las comillas invertidas ` `
                     html += <div class="carta"><span class="tag">✨ DESBLOQUEADO</span><p>${f.texto}</p></div>;
                 } else {
                     const r = desc - ahora;
@@ -121,7 +119,7 @@
                     const hr = Math.floor((r % 86400000) / 3600000);
                     const m = Math.floor((r % 3600000) / 60000);
                     const s = Math.floor((r % 60000) / 1000);
-                    // AQUÍ TAMBIÉN: Se agregaron las comillas invertidas ` `
+                    // AQUÍ TAMBIÉN: Agregué las comillas invertidas ` `
                     html += <div class="carta bloqueada"><span class="tag">🔒 Disponible en: ${d}d ${hr}h ${m}m ${s}s</span><p><i>Mensaje sorpresa...</i></p></div>;
                 }
             });
