@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Buzón de Amor 💌</title>
     <style>
-        :root { --rosa: #ff4d6d; --texto: #590d22; }
+        :root { --rosa: #ff4d6d; --fondo: #fff0f3; --texto: #590d22; }
         
         body { 
-            /* Tu imagen de Postimg */
+            /* Tu imagen del perrito */
             background-image: url('https://i.postimg.cc/LXs6wcwy/65a54829cbbe07a6302459f35420ec2e.jpg');
-            background-size: cover;
-            background-position: center;
+            background-size: cover; 
+            background-position: center; 
             background-attachment: fixed;
-            background-repeat: no-repeat;
+            background-color: var(--fondo); 
             
             font-family: sans-serif; 
             margin: 0; 
@@ -21,7 +21,7 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            color: var(--texto); 
+            color: var(--texto);
             overflow-x: hidden;
         }
 
@@ -30,39 +30,47 @@
             font-size: 1.6rem; 
             text-align: center; 
             z-index: 2; 
-            background: rgba(255, 255, 255, 0.7); /* Fondo clarito para el título */
-            padding: 10px 25px;
-            border-radius: 50px;
-            backdrop-filter: blur(4px);
-        }
-
-        .btn-notif { background: var(--rosa); color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; margin-bottom: 25px; cursor: pointer; z-index: 2; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        
-        #contenedor { width: 100%; max-width: 400px; z-index: 2; }
-
-        .carta { 
-            background: rgba(255, 255, 255, 0.85); /* Cartas un poco transparentes */
-            padding: 20px; 
-            margin-bottom: 15px; 
-            border-radius: 20px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
-            border-left: 8px solid var(--rosa); 
+            background: rgba(255, 255, 255, 0.7); 
+            padding: 10px 20px; 
+            border-radius: 50px; 
             backdrop-filter: blur(5px);
         }
 
-        .bloqueada { background: rgba(240, 240, 240, 0.8); border-left-color: #adb5bd; }
+        #contenedor { width: 100%; max-width: 400px; z-index: 2; }
+
+        .carta { 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 20px; 
+            margin-bottom: 15px; 
+            border-radius: 20px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+            border-left: 8px solid var(--rosa); 
+        }
+
+        .bloqueada { background: rgba(238, 238, 238, 0.8); border-left-color: #adb5bd; opacity: 0.9; }
+
         .tag { display: block; font-size: 0.75rem; color: var(--rosa); font-weight: bold; margin-bottom: 5px; }
-        .corazon-bg { position: fixed; top: -10%; font-size: 20px; user-select: none; pointer-events: none; animation: fall linear forwards; z-index: 1; }
+
+        .corazon-bg { 
+            position: fixed; 
+            top: -10%; 
+            font-size: 20px; 
+            user-select: none; 
+            pointer-events: none; 
+            animation: fall linear forwards; 
+            z-index: 1; 
+        }
+        
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <h1>💌 Nuestro Buzón Mágico</h1>
-    <button class="btn-notif" id="btnNotif" onclick="pedirPermiso()">🔔 Activar Notificaciones</button>
     <div id="contenedor">Cargando...</div>
 
     <script>
+        // LISTA DE 14 MENSAJES (7 DÍAS)
         const frases = [
             { id: 1, texto: "¡Empieza nuestra semana! ❤️", h: 0 },
             { id: 2, texto: "Eres lo mejor de mi día 😍", h: 12 },
@@ -80,22 +88,13 @@
             { id: 14, texto: "¡Mañana reiniciamos! ✨", h: 156 }
         ];
 
-        function pedirPermiso() {
-            Notification.requestPermission().then(p => {
-                if(p === "granted") {
-                    document.getElementById('btnNotif').style.display = 'none';
-                    new Notification("¡Buzón Activado! ❤️");
-                }
-            });
-        }
-
         function crearCorazon() {
             const c = document.createElement('div');
             c.className = 'corazon-bg';
             c.innerHTML = '❤️';
             c.style.left = Math.random() * 100 + 'vw';
             c.style.animationDuration = Math.random() * 3 + 2 + 's';
-            c.style.opacity = 0.6;
+            c.style.opacity = Math.random() * 0.5 + 0.3;
             document.body.appendChild(c);
             setTimeout(() => c.remove(), 5000);
         }
@@ -104,6 +103,8 @@
         function mostrar() {
             const cont = document.getElementById('contenedor');
             const ahora = Date.now();
+            
+            // Usamos la memoria simple original
             let inicio = localStorage.getItem('ID_RESCATE_TOTAL');
             
             if (!inicio) {
@@ -111,10 +112,10 @@
                 localStorage.setItem('ID_RESCATE_TOTAL', inicio);
             }
 
+            // Reinicio automático cada 7 días
             if ((ahora - parseInt(inicio)) > (168 * 3600000)) {
                 inicio = ahora;
                 localStorage.setItem('ID_RESCATE_TOTAL', inicio);
-                frases.forEach(f => localStorage.removeItem('aviso_' + f.id));
             }
             
             let html = '';
@@ -122,12 +123,6 @@
                 const desc = parseInt(inicio) + (f.h * 3600000);
                 if (ahora >= desc) {
                     html += <div class="carta"><span class="tag">✨ DESBLOQUEADO</span><p>${f.texto}</p></div>;
-                    if (!localStorage.getItem('aviso_' + f.id) && f.h > 0) {
-                        if (Notification.permission === "granted") {
-                            new Notification("¡Nueva Carta! 💌");
-                        }
-                        localStorage.setItem('aviso_' + f.id, "true");
-                    }
                 } else {
                     const r = desc - ahora;
                     const d = Math.floor(r / 86400000);
@@ -140,7 +135,6 @@
             cont.innerHTML = html;
         }
 
-        if (Notification.permission === "granted") document.getElementById('btnNotif').style.display = 'none';
         mostrar();
         setInterval(mostrar, 1000);
     </script>
